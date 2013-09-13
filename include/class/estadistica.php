@@ -41,5 +41,5 @@ class estadistica extends estadisticaBD
 	{
 		return $this->votos;
 	}
-}
-?>
+}?>
+

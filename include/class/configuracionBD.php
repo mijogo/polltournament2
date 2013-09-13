@@ -53,18 +53,11 @@ class configuracionBD extends DataBase
 		if($multi)
 		{
 			$result = $this->select($sql);
-			$".configuracion."s = array();
+			$configuracions = array();
 			while($row = $this->fetch($result))
 			{
 				$i=0;
-				$".configuracion."s[]=new configuracion(";
-			for($i=0;$i<count($ElementosTabla);$i++)
-			{
-				$text.= "$row[$i++]";
-				if($i!=count($ElementosTabla)-1)
-					$text.= ",";
-			}
-			$text.=");
+				$configuracions[]=new configuracion($row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++]);
 			}
 			return $configuracions;
 		}
@@ -73,14 +66,7 @@ class configuracionBD extends DataBase
 			$result = $this->select($sql);
 			$row = $this->fetch($result);
 			$i=0;
-			$configuracions= new configuracion(";
-			for($i=0;$i<count($ElementosTabla);$i++)
-			{
-				$text.= "$row[$i++]";
-				if($i!=count($ElementosTabla)-1)
-					$text.= ",";
-			}
-			$text.=");
+			$configuracions= new configuracion($row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++]);
 			return $configuracions;
 		}
 	}

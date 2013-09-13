@@ -122,5 +122,5 @@ class configuracion extends configuracionBD
 	{
 		return $this->extra;
 	}
-}
-?>
+}?>
+

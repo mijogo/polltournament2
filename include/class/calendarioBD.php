@@ -47,18 +47,11 @@ class calendarioBD extends DataBase
 		if($multi)
 		{
 			$result = $this->select($sql);
-			$".calendario."s = array();
+			$calendarios = array();
 			while($row = $this->fetch($result))
 			{
 				$i=0;
-				$".calendario."s[]=new calendario(";
-			for($i=0;$i<count($ElementosTabla);$i++)
-			{
-				$text.= "$row[$i++]";
-				if($i!=count($ElementosTabla)-1)
-					$text.= ",";
-			}
-			$text.=");
+				$calendarios[]=new calendario($row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++]);
 			}
 			return $calendarios;
 		}
@@ -67,14 +60,7 @@ class calendarioBD extends DataBase
 			$result = $this->select($sql);
 			$row = $this->fetch($result);
 			$i=0;
-			$calendarios= new calendario(";
-			for($i=0;$i<count($ElementosTabla);$i++)
-			{
-				$text.= "$row[$i++]";
-				if($i!=count($ElementosTabla)-1)
-					$text.= ",";
-			}
-			$text.=");
+			$calendarios= new calendario($row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++]);
 			return $calendarios;
 		}
 	}
@@ -121,4 +107,5 @@ class calendarioBD extends DataBase
 		}
 		return $this->insert($sql);
 	}
-}?>
+}
+?>

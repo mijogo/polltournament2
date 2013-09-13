@@ -44,18 +44,11 @@ class estadisticaBD extends DataBase
 		if($multi)
 		{
 			$result = $this->select($sql);
-			$".estadistica."s = array();
+			$estadisticas = array();
 			while($row = $this->fetch($result))
 			{
 				$i=0;
-				$".estadistica."s[]=new estadistica(";
-			for($i=0;$i<count($ElementosTabla);$i++)
-			{
-				$text.= "$row[$i++]";
-				if($i!=count($ElementosTabla)-1)
-					$text.= ",";
-			}
-			$text.=");
+				$estadisticas[]=new estadistica($row[$i++],$row[$i++],$row[$i++],$row[$i++]);
 			}
 			return $estadisticas;
 		}
@@ -64,14 +57,7 @@ class estadisticaBD extends DataBase
 			$result = $this->select($sql);
 			$row = $this->fetch($result);
 			$i=0;
-			$estadisticas= new estadistica(";
-			for($i=0;$i<count($ElementosTabla);$i++)
-			{
-				$text.= "$row[$i++]";
-				if($i!=count($ElementosTabla)-1)
-					$text.= ",";
-			}
-			$text.=");
+			$estadisticas= new estadistica($row[$i++],$row[$i++],$row[$i++],$row[$i++]);
 			return $estadisticas;
 		}
 	}
@@ -118,4 +104,5 @@ class estadisticaBD extends DataBase
 		}
 		return $this->insert($sql);
 	}
-}?>
+}
+?>

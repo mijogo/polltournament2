@@ -68,5 +68,5 @@ class calendario extends calendarioBD
 	{
 		return $this->targetint;
 	}
-}
-?>
+}?>
+

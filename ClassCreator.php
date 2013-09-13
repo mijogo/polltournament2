@@ -1,5 +1,6 @@
 <?php
-$NombreTabla="batalla";
+//Batalla
+/*$NombreTabla="batalla";
 $ElementosTabla=array();
 $ElementosTabla[]="id";
 $ElementosTabla[]="fecha";
@@ -8,7 +9,37 @@ $ElementosTabla[]="grupo";
 $ElementosTabla[]="idtorneo";
 $ElementosTabla[]="estado";
 $ElementosTabla[]="numerovotos";
-$ElementosTabla[]="ganador";
+$ElementosTabla[]="ganador";*/
+//calendario
+/*$NombreTabla="calendario";
+$ElementosTabla=array();
+$ElementosTabla[]="id";
+$ElementosTabla[]="accion";
+$ElementosTabla[]="fecha";
+$ElementosTabla[]="hecho";
+$ElementosTabla[]="targetstring";
+$ElementosTabla[]="targetdate";
+$ElementosTabla[]="targetint";*/
+//configuracion
+/*$NombreTabla="configuracion";
+$ElementosTabla=array();
+$ElementosTabla[]="id";
+$ElementosTabla[]="nombre";
+$ElementosTabla[]="idtorneo";
+$ElementosTabla[]="numerogrupos";
+$ElementosTabla[]="tipo";
+$ElementosTabla[]="segundo";
+$ElementosTabla[]="primclas";
+$ElementosTabla[]="primproxronda";
+$ElementosTabla[]="segclas";
+$ElementosTabla[]="segproxronda";
+$ElementosTabla[]="sorteo";
+$ElementosTabla[]="limitevotos";
+$ElementosTabla[]="extra";*/
+//estadistica
+$NombreTabla="estadistica";
+$ElementosTabla=array("idpersonaje","idbatalla","fecha","votos");
+
 $text = "";
 $text = "<?php
 require_once \"".$NombreTabla."BD.php\";
