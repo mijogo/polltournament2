@@ -94,7 +94,8 @@ class MasterClass
 					if($this->activoForo && $estaIp->gettiempo()>0)
 					{
 						$estaIp->settiempo(0);
-						$estaIp->update(1,array("tiempo"),1,array("id"))
+						$estaIp->setuser($this->userForo->getuser_id());
+						$estaIp->update(1,array("tiempo","user"),1,array("uniquecode"))
 					}
 				}
 			}
@@ -102,6 +103,47 @@ class MasterClass
 			{
 				$this->newUniqueCode = $this->cookies."-".$evetoActual->getid();
 				$this->ip = getRealIP();
+				$this->crearIp();
+			}
+			//analizar datos anteriores
+			$ipUsadas=new ip();
+			$ipUsadas->setcodepass($this->cookies);
+			$ipUsadas->setip($this->ip);
+			$ipUsadas->setidevento($evetoActual->getid());
+			if($this->activoForo)
+			{
+				$ipUsadas->setuser($this->userForo->getuser_id());
+				$ipUsadas = $ipUsadas->read(true,0,"",1,array("fecha","ASC")," idevento = ".$ipUsadas->getidevento()." AND (codepass = '".$ipUsadas->getcodepass()."' OR ip = '".$ipUsadas->getip()."' OR user = ".$ipUsadas->getuser().") ");
+			}
+			else
+				$ipUsadas = $ipUsadas->read(true,0,"",1,array("fecha","ASC")," idevento = ".$ipUsadas->getidevento()." AND (codepass = '".$ipUsadas->getcodepass()."' OR ip = '".$ipUsadas->getip()."') ");
+			$mastercode="";
+			$masterip="";
+			$usado=0;
+			for($i=0;$i<count($ipUsadas);$i++)
+			{
+				if($i==0)
+				{
+					$mastercode = $ipUsadas[$i]->getmastercode();
+					$masterip = $ipUsadas[$i]->getmasterip();			
+				}
+				if($ipUsadas[$i]->getusada()>0)
+					 $usado=1;
+			}
+			for($i=0;$i<count($ipUsadas);$i++)
+			{
+				if($ipUsadas[$i]->getusada()==0 && ($ipUsadas[$i]->getmastercode() !=  $mastercode||$ipUsadas[$i]->getmasterip() !=  $masterip))
+				{
+					$ipUsadas[$i]->setmastercode($mastercode);
+					$ipUsadas[$i]->setmasterip($masterip);
+					if($usado==0)
+						$ipUsadas[$i]->update(2,array("mastercode","masterip"),1,array("uniquecode"));
+					else
+					{
+						$ipUsadas[$i]->setusada(3);
+						$ipUsadas[$i]->update(3,array("mastercode","masterip","usada"),1,array("uniquecode"));
+					}
+				}
 			}
 		}
 	}
@@ -166,7 +208,10 @@ class MasterClass
 		}*/
 		$extraInfo = $_SERVER['HTTP_USER_AGENT'];
 		$creaIp->setinfo($extraInfo);
-		$creaIp->setuser($this->userForo);
+		if($this->activoForo)
+			$creaIp->setuser($this->userForo->getuser_id());
+		else
+			$creaIp->setuser(-1);
 		$creaIp->setuniquecode($this->newUniqueCode);
 		$creaIp->save();
 		setcookie("uniqueCode",$this->newUniqueCode,time()+(2*60*60*24));
