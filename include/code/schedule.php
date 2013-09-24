@@ -105,7 +105,7 @@ class Schedule
 				
 				for($i=$cantidadListos;$i<$cantidadGrupo;$i++)
 				{
-					$escoger=rand(0,count($personajesSortear));
+					$escoger=rand(0,count($personajesSortear)-1);
 					$sigue=true;
 					while($sigue)
 					{
@@ -154,7 +154,7 @@ class Schedule
 			{
 				for($i=$cantidadListos;$i<$cantidadGrupo;$i++)
 				{
-					$escoger=rand(0,count($personajesSortear));
+					$escoger=rand(0,count($personajesSortear)-1);
 					$sigue=true;
 					while($sigue)
 					{
@@ -237,7 +237,7 @@ class Schedule
 				for($i=$cantidadListos;$i<$totalDelGrupo;$i++)
 				{
 							
-					$escoger=rand(0,count($personajesSortear));
+					$escoger=rand(0,count($personajesSortear)-1);
 					$sigue=true;
 					while($sigue)
 					{
@@ -281,11 +281,120 @@ class Schedule
 						}
 					}
 				}
-				$datosGrupo[$i]["cantidad"]
+
+				$cuantosVan=0;
 				for($i=0;$i<count($datosGrupo);$i++)
 				{
-					
+					ponderacionGrupo=0;
+					if($cuantosVan+$datosGrupo[$i]["cantidad"]>$cantidadListos)
+					{
+						if($cuantosVan < $cantidadListos)
+						{
+							$personajesUsados = new personajepar();
+							$personajesUsados ->setronda($instancia);
+							$personajesUsados ->setgrupo($datosGrupo[$i]["nombre"]);
+							$personajesUsados ->setidtorneo($torneoActual->getid());
+							$personajesUsados = $personajesUsados->read(true,3,array("ronda","AND","grupo","AND","idtorneo"));
+						}
+						for($j=0;$j<$datosGrupo[$i]["cantidad"];$j++)
+						{
+							if($cuantosVan+$j+1>$cantidadListos)
+							{
+								$escoger=rand(0,count($sorGrupo)-1);
+								$sigue=true;
+								while($sigue)
+								{
+									if($sorGrupo[$escoger]["act"]==1)
+										$escoger=$sorGrupo[$escoger]["prox"];
+									else
+									{
+										$porcentaje = ($ponderacionGrupo+$personajesSortear[sorGrupo[$escoger]["id"]]->getponderacion())/($j+1);
+										$porcentaje = abs(($porcentaje-$torneoActual->getponderacionprom())/$torneoActual->getponderacionprom())
+										$porcentaje = 1000 - $porcentaje*1000;
+										if($porcentaje<50)
+											$porcentaje=50;
+										$res = rand(0,1000);
+										if($res<$porcentaje)
+										{			
+											$personajesSortear[$sorGrupo[$escoger]["id"]]->setgrupo($datosGrupo[$i]["nombre"]);
+											$personajesSortear[$sorGrupo[$escoger]["id"]]->update(1,array("grupo"),1,array("id"))
+											
+											$sorGrupo[$escoger]["act"]=1;
+											$temSort = $sorGrupo[$escoger];
+														
+											$tempProx=$sorGrupo[$escoger]["prox"];
+											while($sorGrupo[$tempProx]["act"]==1&&$sorGrupo[$tempMov]["prox"]!=$escoger)
+												$tempProx=$sorGrupo[$tempMov]["prox"];
+											$tempAnt=$sorGrupo[$escoger]["ant"];
+											while($sorGrupo[$tempAnt]["act"]==1&&$sorGrupo[$tempMov]["ant"]!=$escoger)
+												$tempAnt=$sorGrupo[$tempAnt]["ant"];
+															
+											$sorGrupo[$escoger]["prox"]=$tempProx;
+											$sorGrupo[$escoger]["ant"]=$tempAnt;
+											$sorGrupo[$tempAnt]["prox"]=$tempProx;
+											$sorGrupo[$tempProx]["ant"]=$tempAnt;
+											$sigue=false;
+														
+											$ponderacionGrupo += $personajesSortear[$sorGrupo[$escoger]["id"]]->getponderacion();							
+										}
+										else
+											$escoger=$perSort[$escoger]["prox"];
+									}
+								}
+							}
+							else
+							{
+								$ponderacionGrupo += $personajesUsados[$j]->getponderacion();
+							}
+						}
+					}
+					$cuantosVan+=$datosGrupo[$i]["cantidad"];
 				}
+			}
+			else
+			{
+				$cuantosVan=0;
+				for($i=0;$i<count($datosGrupo);$i++)
+				{
+					if($cuantosVan+$datosGrupo[$i]["cantidad"]>$cantidadListos)
+					{
+						for($j=0;$j<$datosGrupo[$i]["cantidad"];$j++)
+						{
+							if($cuantosVan+$j+1>$cantidadListos)
+							{
+								$escoger=rand(0,count($perSort)-1);
+								$sigue=true;
+								while($sigue)
+								{
+									if($sorGrupo[$escoger]["act"]==1)
+										$escoger=$sorGrupo[$escoger]["prox"];
+									else
+									{
+										$personajesSortear[$escoger]->setgrupo($datosGrupo[$i]["nombre"]);
+										$personajesSortear[$escoger]->update(1,array("grupo"),1,array("id"))
+											
+										$perSort[$escoger]["act"]=1;
+										$temSort = $perSort[$escoger];
+														
+										$tempProx=$perSort[$escoger]["prox"];
+										while($perSort[$tempProx]["act"]==1&&$perSort[$tempMov]["prox"]!=$escoger)
+											$tempProx=$perSort[$tempMov]["prox"];
+										$tempAnt=$perSort[$escoger]["ant"];
+										while($perSort[$tempAnt]["act"]==1&&$perSort[$tempMov]["ant"]!=$escoger)
+											$tempAnt=$perSort[$tempAnt]["ant"];
+															
+										$perSort[$escoger]["prox"]=$tempProx;
+										$perSort[$escoger]["ant"]=$tempAnt;
+										$perSort[$tempAnt]["prox"]=$tempProx;
+										$perSort[$tempProx]["ant"]=$tempAnt;
+										$sigue=false;
+									}
+								}
+							}
+						}
+					}
+					$cuantosVan+=$datosGrupo[$i]["cantidad"];
+				}				
 			}
 		}
 	}
