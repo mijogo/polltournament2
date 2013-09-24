@@ -401,7 +401,51 @@ class Schedule
 	function activarBatalla($fecha="")
 	{}
 	function ConteoVotos()
-	{}
+	{
+		$BatallasActivas=new batalla();
+		$BatallasActivas->setestado(0);
+		$BatallasActivas = $BatallasActivas->read(true,1,array(estado));
+		
+		$evetoActual = new evento();
+		$evetoActual->setestado(1);
+		$evetoActual = $evetoActual->read(false,1,array("estado"));
+		
+		$ipVotantes = new ip();
+		$ipVotantes->setidevento($evetoActual->getid());
+		$ipVotantes->setusada(1);
+		$ipVotantes = $ipVotantes->read(true,2,array("evento","AND","usada"));
+		$votosTotales = count($ipVotantes);
+		
+		for($i=0;$i<count($BatallasActivas);$i++)
+		{
+			$partBat = new participacion();
+			$partBat->setidbatalla($BatallasActivas[$i]->getid());
+			$partBat = $partBat->read(true,1,array("idbatalla"));
+			
+			$peleaLista = new pelea();
+			$peleaLista->setidbatalla($BatallasActivas[$i]->getid());
+			$peleaLista = $peleaLista->read(true,1,array("idbatalla"));
+			
+			for($i=0;$i<count($partBat);$i++)
+			{
+				$peleas[$i]["votos"]=0;
+				$peleas[$i]["id"]=$partBat[$i]->getidpersonaje();
+				$peleas[$i]["listo"]=0;
+				for($j=0;$j<count($peleaLista);$j++)
+					if($peleaLista[$j]->getidpersonaje()==$peleas[$i]["id"])
+					{
+						$peleas[$i]["votos"]=$peleaLista[$j]->getvotos();
+						$peleas[$i]["listo"]=1;
+					}
+			}
+			
+			$BatallasActivas[$i]->setestado(1);
+			$BatallasActivas[$i]->setnumerovotos($votosTotales);
+			$BatallasActivas[$i]->setganador($idGanador);
+			$BatallasActivas[$i]->update(3,array("estado","numerovotos","ganador"),1,array("id"))
+		}
+		changeEvento("KILL");
+	}//fin funcion conteo votos
 	function changeChampionship($nuevoEstado="")
 	{}
 	function changeEvento($nuevoEstado="")
