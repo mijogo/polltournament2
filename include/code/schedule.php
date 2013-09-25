@@ -418,6 +418,10 @@ class Schedule
 		
 		for($i=0;$i<count($BatallasActivas);$i++)
 		{
+			$torneoActual = new torneo();
+			$torneoActual->setactivo(1);
+			$torneoActual = $torneoActual->read(false,1,array("activo"));
+		
 			$partBat = new participacion();
 			$partBat->setidbatalla($BatallasActivas[$i]->getid());
 			$partBat = $partBat->read(true,1,array("idbatalla"));
@@ -437,8 +441,97 @@ class Schedule
 						$peleas[$i]["votos"]=$peleaLista[$j]->getvotos();
 						$peleas[$i]["listo"]=1;
 					}
+				if($peleas[$i]["listo"]==0)
+				{
+					$votosDelPersonaje = new voto();
+					$votosDelPersonaje->setidbatalla($partBat[$i]->getidpersonaje());
+					$votosDelPersonaje->setidpersonaje($BatallasActivas[$i]->getid());
+					$votosDelPersonaje = $votosDelPersonaje->read(true,2,array("idbatalla","AND","idpersonaje"),1,array("fecha","ASC"));
+					
+					$fechaInicio = $BatallasActivas[$i]->getfecha()." ".$torneoActual->gethorainicio();
+					
+					$estadisticasListas = new estadistica();
+					$estadisticasListas->setidpersonaje($partBat[$i]->getidpersonaje());
+					$estadisticasListas->setidbatalla($BatallasActivas[$i]->getid());
+					$estadisticasListas = $estadisticasListas->read(true,2,array("idpersonaje","AND","idbatalla"),1,array("fecha","ASC"));
+					$sigueLoop = true;
+					if(count($estadisticasListas)>0)
+						$k=$estadisticasListas[count($estadisticasListas)-1]->getvotos();
+					else
+						$k=0;
+					for($j=0;$sigueLoop;$j++)
+					{
+						if(count($estadisticasListas)=<$j)
+						{
+							while(FechaMayor($fechaInicio,$votosDelPersonaje[$k]->getfecha()&&$k<count($votosDelPersonaje))==1)
+								$k++;
+							$estadisticaNueva = new($partBat[$i]->getidpersonaje(),$BatallasActivas[$i]->getid(),$fechaInicio,$k);
+							$estadisticaNueva->save();
+						}
+						cambioFecha($fechaInicio,$torneoActual->getintervalo());
+						if($k>=count($votosDelPersonaje))
+							$sigueLoop=false;
+					}
+					$guardarPelea = new pelea($partBat[$i]->getidpersonaje(),$BatallasActivas[$i]->getid(),count($votosDelPersonaje));
+					$guardarPelea->save();
+				}
 			}
 			
+			$peleaBatalla = new pelea();
+			$peleaBatalla->setidbatalla($BatallasActivas[$i]->getid());
+			$peleaBatalla = $peleaBatalla->read(true,1,array("idbatalla"),1,array("votos","DESC"))
+			
+			$configuracionUsar = new configuracion();
+			$configuracionUsar->setnombre($BatallasActivas[$i]->getronda());
+			$configuracionUsar->setidtorneo($torneoActual->getid());
+			$configuracionUsar = $configuracionUsar->read(false,2,array("nombre","AND","idtorneo"));
+			
+			$configuracionSig = new configuracion();
+			$configuracionSig->setnombre($configuracionUsar->getprimproxronda());
+			$configuracionSig->setidtorneo($torneoActual->getid());
+			$configuracionSig = $configuracionSig->read(false,2,array("nombre","AND","idtorneo"));
+			
+			$primeraPos = true;
+			$primPos = $configuracionUsar->getprimclas();
+			if($configuracionUsar->getsegundo()==1)
+			{
+				$segPos = $configuracionUsar->getsegclas();
+				$configuracionSigSeg = new configuracion();
+				$configuracionSigSeg->setnombre($configuracionUsar->getsegproxronda());
+				$configuracionSigSeg->setidtorneo($torneoActual->getid());
+				$configuracionSigSeg = $configuracionSigSeg->read(false,2,array("nombre","AND","idtorneo"));				
+			}
+			$idGanador="";
+				
+			for($i=0;$i<count($peleaBatalla);$i++)
+			{
+				if($primeraPos)
+				{
+					$idGanador.=$peleaBatalla[$i]->getidpersonaje()."-";
+					if($i+1<count($peleaBatalla)&&($peleaBatalla[$i]->getvotos()!=$peleaBatalla[$i+1]->getvotos()))
+					{
+						$primeraPos=false;
+						$idGanador.="END";
+					}
+				}
+				if($configuracionUsar->getnombre()!="Exhibición")
+					if($i<$primPos)
+					{
+						$personajeCambiar = new personajepar();
+						$personajeCambiar->setid($peleaBatalla[$i]->getidpersonaje());
+						$personajeCambiar = $personajeCambiar->read(false,1,array("id"));
+						
+						$personajeCambiar->setronda($configuracionUsar->getprimproxronda());
+						if($configuracionUsar->getsorteo()==1)
+							$personajeCambiar->setronda("N");
+						else
+							if($configuracionUsar->gettipo()=="ELIMI")
+								$personajeCambiar->setgrupo(cambioGrupo($personajeCambiar->getgrupo(),$configuracionUsar->getnumerogrupos(),configuracionSig->getnumerogrupos),"ELIMI");
+							elseif($configuracionUsar->gettipo()=="ELGRU")
+								$personajeCambiar->setgrupo(cambioGrupo($personajeCambiar->getgrupo(),$configuracionUsar->getnumerobatallas(),configuracionSig->getnumerobatallas),"ELGRU");
+					}
+			}
+						
 			$BatallasActivas[$i]->setestado(1);
 			$BatallasActivas[$i]->setnumerovotos($votosTotales);
 			$BatallasActivas[$i]->setganador($idGanador);

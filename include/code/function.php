@@ -306,4 +306,9 @@ function fechaCorta($fecha)
 	$fecha2=explode("-",$fecha[0]);
 	return $fecha2[2]."/".$fecha2[1];
 }
+
+function cambioGrupo()
+{
+
+}
 ?>
