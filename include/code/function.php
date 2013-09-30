@@ -307,8 +307,22 @@ function fechaCorta($fecha)
 	return $fecha2[2]."/".$fecha2[1];
 }
 
-function cambioGrupo()
+function cambioGrupo($grupo,$nActual,$nSiguiente,$tipo)
 {
-
+	if($tipo=="ELIMI")
+	{
+		$cantidad = $nActual/$nSiguiente;
+		$actual=$actual/$cantidad;
+		$actual=ceil($actual);
+		return $actual;
+	}
+	elseif($tipo=="ELGRU")
+	{
+		$actual = explode("-",$actual);
+		$cantidad = $nActual/$nSiguiente;
+		$actual[1]=$actual[1]/$cantidad;
+		$actual[1]=ceil($actual[1]);
+		return $actual[0]."-".$actual[1];
+	}
 }
 ?>

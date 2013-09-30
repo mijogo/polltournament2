@@ -399,7 +399,17 @@ class Schedule
 		}
 	}
 	function activarBatalla($fecha="")
-	{}
+	{
+		$vamosBatallas = new batalla();
+		$vamosBatallas->setactiva(-1);
+		$vamosBatallas->setfecha($fecha);
+		$vamosBatallas = $vamosBatallas->read(true,2,array("activa","AND","fecha"));
+		for($i=0;$i<count($vamosBatallas);$i++)
+		{
+			$vamosBatallas[$i]->setActiva(0);
+			$vamosBatallas[$i]->update(1,array("activa"),1,array("id"));
+		}	
+	}
 	function ConteoVotos()
 	{
 		$BatallasActivas=new batalla();
@@ -514,7 +524,7 @@ class Schedule
 						$idGanador.="END";
 					}
 				}
-				if($configuracionUsar->getnombre()!="Exhibición")
+				if($configuracionUsar->gettipo()!="EXHIB")
 					if($i<$primPos)
 					{
 						$personajeCambiar = new personajepar();
@@ -522,13 +532,48 @@ class Schedule
 						$personajeCambiar = $personajeCambiar->read(false,1,array("id"));
 						
 						$personajeCambiar->setronda($configuracionUsar->getprimproxronda());
-						if($configuracionUsar->getsorteo()==1)
+						if($configuracionSig->getsorteo()==1)
+							$personajeCambiar->setgrupo("N");
+						else
+							if($configuracionSig->gettipo()=="ELIMI")
+								$personajeCambiar->setgrupo(cambioGrupo($personajeCambiar->getgrupo(),$configuracionUsar->getnumerogrupos(),configuracionSig->getnumerogrupos(),"ELIMI");
+							elseif($configuracionSig->gettipo()=="ELGRU")
+								$personajeCambiar->setgrupo(cambioGrupo($personajeCambiar->getgrupo(),$configuracionUsar->getnumerobatallas(),configuracionSig->getnumerobatallas(),"ELGRU");
+						$personajeCambiar->update(2,array("grupo","ronda"),1,array("id"));
+						if($i==$primPos-1&&$i<count($peleaBatalla)-1&&$peleaBatalla[$i]->getvotos()==$peleaBatalla[$i+1]->getvotos())
+						{
+							$primeraPos++;
+							if($configuracionUsar->getsegundo()==1)
+								$segPos++;
+						}
+					}
+					elseif($configuracionUsar->getsegundo()==1&&$i<$segPos)
+					{
+						$personajeCambiar = new personajepar();
+						$personajeCambiar->setid($peleaBatalla[$i]->getidpersonaje());
+						$personajeCambiar = $personajeCambiar->read(false,1,array("id"));
+						
+						$personajeCambiar->setronda($configuracionUsar->getsegproxronda());
+						if($configuracionSigSeg->getsorteo()==1)
 							$personajeCambiar->setronda("N");
 						else
-							if($configuracionUsar->gettipo()=="ELIMI")
-								$personajeCambiar->setgrupo(cambioGrupo($personajeCambiar->getgrupo(),$configuracionUsar->getnumerogrupos(),configuracionSig->getnumerogrupos),"ELIMI");
-							elseif($configuracionUsar->gettipo()=="ELGRU")
-								$personajeCambiar->setgrupo(cambioGrupo($personajeCambiar->getgrupo(),$configuracionUsar->getnumerobatallas(),configuracionSig->getnumerobatallas),"ELGRU");
+							if($configuracionSigSeg->gettipo()=="ELIMI")
+								$personajeCambiar->setgrupo(cambioGrupo($personajeCambiar->getgrupo(),$configuracionUsar->getnumerogrupos(),configuracionSigSeg->getnumerogrupos(),"ELIMI");
+							elseif($configuracionSigSeg->gettipo()=="ELGRU")
+								$personajeCambiar->setgrupo(cambioGrupo($personajeCambiar->getgrupo(),$configuracionUsar->getnumerobatallas(),configuracionSigSeg->getnumerobatallas(),"ELGRU");
+						$personajeCambiar->update(2,array("grupo","ronda"),1,array("id"));
+						if($i==$segPos-1&&$i<count($peleaBatalla)-1&&$peleaBatalla[$i]->getvotos()==$peleaBatalla[$i+1]->getvotos())
+						{
+							$segPos++;
+						}						
+					}
+					else
+					{
+						$personajeCambiar = new personajepar();
+						$personajeCambiar->setid($peleaBatalla[$i]->getidpersonaje());
+						$personajeCambiar = $personajeCambiar->read(false,1,array("id"));
+						$personajeCambiar->setestado(3);
+						$personajeCambiar->update(1,array("estado"),1,array("id"));
 					}
 			}
 						
@@ -540,11 +585,34 @@ class Schedule
 		changeEvento("KILL");
 	}//fin funcion conteo votos
 	function changeChampionship($nuevoEstado="")
-	{}
-	function changeEvento($nuevoEstado="")
-	{}
-	function calcularPonderacion()
-	{}
+	{
+		$torneoActual = new torneo();
+		$torneoActual->setactivo(1);
+		$torneoActual = $torneoActual->read(false,1,array("activo"));
+		$torneoActual->setestado($nuevoEstado);
+		$torneoActual->update(1,array("estado"),1,array("id"));
+	}
+	function changeEvento($nuevoEstado="",$tipo="")
+	{
+		$torneoActual = new torneo();
+		$torneoActual->setactivo(1);
+		$torneoActual = $torneoActual->read(false,1,array("activo"));
 
+		if($nuevoEstado=="CREAR")
+			$nuevoEvento = new evento("",1,$torneoActual->getid(),fechaHoraActual(),$tipo);
+		elseif($nuevoEstado=="KILL")
+		{
+			$nuevoEvento = new evento();
+			$nuevoEvento->setestado(1);
+			$nuevoEvento = $nuevoEvento->read(false,1,array("estado"));
+			$nuevoEvento->setfechatermino(fechaHoraActual());
+			$nuevoEvento->setestado(-1);
+			$nuevoEvento->update(2,array("estado","fechatermino"),1,array("id"));
+		}
+	}
+	function calcularPonderacion($instanciaActual="",$instanciaPonderar)
+	{
+		
+	}
 }
 ?>
