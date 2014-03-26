@@ -21,6 +21,7 @@ class torneo extends torneoBD
 		$this->limitadoractivo = $limitadoractivo;
 		$this->duracionlimitador = $duracionlimitador;
 		$this->porcentajelimite = $porcentajelimite;
+		$this->ponderacionprom = $ponderacionprom;
 	}
 	function setid($id)
 	{
@@ -157,6 +158,14 @@ class torneo extends torneoBD
 	function getporcentajelimite()
 	{
 		return $this->porcentajelimite;
+	}
+	function setponderacionprom($ponderacionprom)
+	{
+		$this->ponderacionprom=$ponderacionprom;
+	}
+	function getponderacionprom()
+	{
+		return $this->ponderacionprom;
 	}
 }
 ?>

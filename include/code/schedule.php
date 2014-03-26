@@ -211,7 +211,7 @@ class Schedule
 					$datosGrupo[$i]["cantidad"]++;
 				$totalDelGrupo += $datosGrupo[$i]["cantidad"];
 				
-				$perListos = new personajepar()
+				$perListos = new personajepar();
 				$perListos->setronda($instancia);
 				$perListos->setgrupo($datosGrupo[$i]["nombre"]);
 				$perListos->setidtorneo($torneoActual->getid());
@@ -612,7 +612,96 @@ class Schedule
 	}
 	function calcularPonderacion($instanciaActual="",$instanciaPonderar)
 	{
+		$personajesutil = new personajepar();
+		$personajesutil->setronda($instanciaActual);
+		$personajesutil = $personajesutil->read(true,1,array("ronda"));
 		
+		$batallutil = new batalla();
+		$batallutil->setronda($instanciaPonderar);
+		$batallutil = $batallutil->read(true,1,array("ronda"));
+		
+		for($i=0;$i<count($batallutil);$i++)
+		{
+			$pos[0] = 1000;
+			$pos[1] = 500;
+			$pos[2] = 300;
+			$pos[3] = 200;
+			$pos[4] = 150;
+			$pos[5] = 150;
+			$pos[6] = 150;
+			$pos[7] = 150;
+			$pos[8] = 100;
+			$pos[9] = 100;
+			$pos[10] = 100;
+			$pos[11] = 100;
+			$pos[12] = 100;
+			$pos[13] = 100;
+			$pos[14] = 60;
+			$pos[15] = 60;
+			$pos[16] = 60;
+			$pos[17] = 60;
+			$pos[18] = 60;
+			$pos[19] = 40;
+			$participaciones = new participacion();
+			$participaciones->setidbatalla(batallutil[$i]->getid());
+			$participaciones = $participaciones->read(true,1,array("idbatalla"));
+			$pelearealizada = new pelea();
+			$pelearealizada->setidbatalla(batallutil[$i]->getid());
+			$pelearealizada = $pelearealizada->read(true,1,array("idbatalla"));
+			$k=0;
+			$totalponderacion=0;
+			for($j=0;$j<count($personajesutil);$j++)
+			{
+				if(comprobararray($participaciones,"idpersonaje",$personajesutil[$j]->getid()))
+				{
+					$grupoponderar[$i][$k][0]=$personajesutil[$i];
+					$grupoponderar[$i][$k][1]=arrayobjeto($pelearealizada,"idpersonaje",$personajesutil[$j]->getid())->getvotos();
+					$grupoponderar[$i][$k][2]=0;
+					$k++;	
+				}
+			}
+			for($j=0;$j<count($grupoponderar[$i])-1;$j++)
+			{
+				for($l=0;$l<count($grupoponderar[$i])-1;$l++)
+				{
+					if($grupoponderar[$i][$l][1] < $grupoponderar[$i][$l+1][1])
+					{
+						$temp = $grupoponderar[$i][$l+1];
+						$grupoponderar[$i][$l+1] = $grupoponderar[$i][$l];
+						$grupoponderar[$i][$l] = $temp;
+					}
+				}	
+			}
+			$totalvotos=0;
+			for($j=0;$j<count($grupoponderar[$i])-1;$j++)
+			{
+				$totalvotos += $grupoponderar[$i][$j][1];
+				if($j!=0 && $grupoponderar[$i][$j-1][1] == $grupoponderar[$i][$j][1])
+				{
+					$grupoponderar[$i][$j][2] = $grupoponderar[$i][$j-1][2];
+				}
+				else
+				{
+					$posicion = $j;
+					if(count($pos)<=$j)
+						$posicion = count($pos)-1;
+					$grupoponderar[$i][$j][2] = $pos[$posicion];
+				}
+			}	
+			for($j=0;$j<count($grupoponderar[$i])-1;$j++)
+			{
+				$grupoponderar[$i][$j][2] += round(1000*($grupoponderar[$i][$j][1]/$totalvotos));
+				$grupoponderar[$i][$j][0]->setponderacion($grupoponderar[$i][$j][2]);
+				$grupoponderar[$i][$j][0]->update(1,array("ponderacion"),1,array("id"));
+				$totalponderacion += $grupoponderar[$i][$j][2];
+			}
+		}
+		
+		$torneoActual = new torneo();
+		$torneoActual->setactivo(1);
+		$torneoActual = $torneoActual->read(false,1,array("activo"));
+		$torneoActual->setponderacionprom(round($totalponderacion/count($personajesutil)));
+		$torneoActual->update(1,array("ponderacionprom"),1,array("id"))
 	}
 }
 ?>

@@ -325,4 +325,21 @@ function cambioGrupo($grupo,$nActual,$nSiguiente,$tipo)
 		return $actual[0]."-".$actual[1];
 	}
 }
+
+function arrayobjeto($arreglo,$tipoDato,$dato)
+{
+	$objeto = false;
+	for($i=0;i<count($arreglo);$i++)
+		if($arreglo[$i]->get$tipoDato() == $dato)
+			$objeto = $arreglo[$i];
+	return $objeto;
+}
+function comprobararray($arreglo,$tipoDato,$dato)
+{
+	$objeto = false;
+	for($i=0;i<count($arreglo);$i++)
+		if($arreglo[$i]->get$tipoDato() == $dato)
+			$objeto = true;
+	return $objeto;
+}
 ?>
