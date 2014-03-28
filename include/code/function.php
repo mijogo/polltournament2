@@ -342,4 +342,17 @@ function comprobararray($arreglo,$tipoDato,$dato)
 			$objeto = true;
 	return $objeto;
 }
+
+function ingPagina($estructura,$menu,$script,$usuario,$body,$extra="")
+{
+	$estructura = explode("[[menu]]",$estructura);
+	$estructura = $estructura[0]+$menu+$estructura[1];
+	$estructura = explode("[[script]]",$estructura);
+	$estructura = $estructura[0]+$script+$estructura[1];
+	$estructura = explode("[[usuario]]",$estructura);
+	$estructura = $estructura[0]+$usuario+$estructura[1];
+	$estructura = explode("[[body]]",$estructura);
+	$estructura = $estructura[0]+$body+$estructura[1];
+	return $estructura;
+}
 ?>

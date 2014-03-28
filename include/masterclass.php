@@ -4,12 +4,29 @@ class MasterClass
 {
 	function MasterClass()
 	{
+		$id_pagina = $_GET['id'];
+		$accion = $_GET['accion'];
 	}
-	
+	// id numero pagina, tipo a que pagina se refiere, action, tipo de accion
 	function Trabajar()
 	{
 		$this->torneoActual();
 		$this->usuarioACC();
+		if($accion == 1)
+		{
+			$pagina = "";
+			$ar=fopen("estructura.html","r") or
+    		die("No se pudo abrir el archivo");
+ 			while (!feof($ar))
+ 			{
+    			$linea=fgets($ar);
+				$pagina += $linea;
+  			}
+  			fclose($ar);
+			$logicaU = new logicav();
+			$datos = $logicaU->logicaView($id_pagina);
+			ingPagina($pagina,$menu,$datos[0],$usuario,$datos[1])
+		}
 	}
 	
 	function torneoActual()
