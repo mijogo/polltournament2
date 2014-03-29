@@ -60,3 +60,4 @@ class log extends logBD
 		return $this->accioncompleta;
 	}
 }?>
+

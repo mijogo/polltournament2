@@ -15,7 +15,7 @@ class eventoBD extends DataBase
 		return $this->insert($sql);
 	}
 
-	function read($multi=true , $cantConsulta = 0 , $Consulta = "" , $cantOrden = 0 , $Orden = "" , , $consultaextra="")
+	function read($multi=true , $cantConsulta = 0 , $Consulta = "" , $cantOrden = 0 , $Orden = "" , $consultaextra="")
 	{
 		$sql="SELECT * FROM evento ";
 		if($consultaextra=="")
@@ -45,18 +45,11 @@ class eventoBD extends DataBase
 		if($multi)
 		{
 			$result = $this->select($sql);
-			$".evento."s = array();
+			$eventos = array();
 			while($row = $this->fetch($result))
 			{
 				$i=0;
-				$".evento."s[]=new evento(";
-			for($i=0;$i<count($ElementosTabla);$i++)
-			{
-				$text.= "$row[$i++]";
-				if($i!=count($ElementosTabla)-1)
-					$text.= ",";
-			}
-			$text.=");
+				$eventos[]=new evento($row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++]);
 			}
 			return $eventos;
 		}
@@ -65,14 +58,7 @@ class eventoBD extends DataBase
 			$result = $this->select($sql);
 			$row = $this->fetch($result);
 			$i=0;
-			$eventos= new evento(";
-			for($i=0;$i<count($ElementosTabla);$i++)
-			{
-				$text.= "$row[$i++]";
-				if($i!=count($ElementosTabla)-1)
-					$text.= ",";
-			}
-			$text.=");
+			$eventos= new evento($row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++]);
 			return $eventos;
 		}
 	}
@@ -119,4 +105,5 @@ class eventoBD extends DataBase
 		}
 		return $this->insert($sql);
 	}
-}}?>
+}
+?>

@@ -1,45 +1,38 @@
 <?php
-//Batalla
-/*$NombreTabla="batalla";
-$ElementosTabla=array();
-$ElementosTabla[]="id";
-$ElementosTabla[]="fecha";
-$ElementosTabla[]="ronda";
-$ElementosTabla[]="grupo";
-$ElementosTabla[]="idtorneo";
-$ElementosTabla[]="estado";
-$ElementosTabla[]="numerovotos";
-$ElementosTabla[]="ganador";*/
-//calendario
-/*$NombreTabla="calendario";
-$ElementosTabla=array();
-$ElementosTabla[]="id";
-$ElementosTabla[]="accion";
-$ElementosTabla[]="fecha";
-$ElementosTabla[]="hecho";
-$ElementosTabla[]="targetstring";
-$ElementosTabla[]="targetdate";
-$ElementosTabla[]="targetint";*/
-//configuracion
-/*$NombreTabla="configuracion";
-$ElementosTabla=array();
-$ElementosTabla[]="id";
-$ElementosTabla[]="nombre";
-$ElementosTabla[]="idtorneo";
-$ElementosTabla[]="numerogrupos";
-$ElementosTabla[]="tipo";
-$ElementosTabla[]="segundo";
-$ElementosTabla[]="primclas";
-$ElementosTabla[]="primproxronda";
-$ElementosTabla[]="segclas";
-$ElementosTabla[]="segproxronda";
-$ElementosTabla[]="sorteo";
-$ElementosTabla[]="limitevotos";
-$ElementosTabla[]="extra";*/
 //estadistica
-$NombreTabla="estadistica";
-$ElementosTabla=array("idpersonaje","idbatalla","fecha","votos");
-
+//$NombreTablaL[0]="estadistica";
+//$ElementosTablaL[0]=array("idpersonaje","idbatalla","fecha","votos");
+//ip
+//$NombreTablaL[0]="ip";
+//$ElementosTablaL[0]=array("fecha","ip","codepass","forumcode","user","idevento","tiempo","usada","uniquecode","mastercode","masterip","info");
+//log
+//$NombreTablaL[0]="log";
+//$ElementosTablaL[0]=array("iduser","accion","fecha","estado","ip","accioncompleta");
+//menu
+//$NombreTablaL[0]="menu";
+//$ElementosTablaL[0]=array("id","dependencia","titulo","tituloingles","url","descripcion");
+//participacionBD
+//$NombreTablaL[0]="participacion";
+//$ElementosTablaL[0]=array("idpersonaje","idbatalla");
+//pelea
+//$NombreTablaL[0]="pelea";
+//$ElementosTablaL[0]=array("idpersonaje","idbatalla","votos");
+//personaje
+//$NombreTablaL[0]="personaje";
+//$ElementosTablaL[0]=array("id","nombre","serie","imagen","idserie","nparticipaciones","mejorpos");
+//personajepar
+//$NombreTablaL[0]="personajepar";
+//$ElementosTablaL[0]=array("id","nombre","serie","idpersonaje","idserie","imagenpeq","imagen","idtorneo","estado","grupo","ronda","seiyuu","ponderacion");
+//torneo
+//$NombreTablaL[0]="torneo";
+//$ElementosTablaL[0]=array("id","ano","version","nombre","activo","estado","duracionbatalla","extraconteo","nominaciones","intervalo","horainicio","duracionlive","maxmiembrosgraf","opcionpartida","limitadoractivo","duracionlimitador","porcentajelimite");
+//usuario
+$NombreTablaL[0]="usuario";
+$ElementosTablaL[0]=array("idusuario","poder","facecode","facecodeex","twittercode","twittercodeex","extracode","extracodeex");
+for($mn =0; $mn < count($NombreTablaL);$mn++)
+{
+$NombreTabla = $NombreTablaL[$mn];
+$ElementosTabla = $ElementosTablaL[$mn];
 $text = "";
 $text = "<?php
 require_once \"".$NombreTabla."BD.php\";
@@ -77,8 +70,6 @@ $text.="	}\n";
 }
 $text.="}?>\n\n";
 
-echo $text;
-
 $fp = fopen("include/class/".$NombreTabla.".php", 'w');
 fwrite($fp, $text);
 fclose($fp);
@@ -110,7 +101,7 @@ $text.=")\";
 		return \$this->insert(\$sql);
 	}
 
-	function read(\$multi=true , \$cantConsulta = 0 , \$Consulta = \"\" , \$cantOrden = 0 , \$Orden = \"\" , , \$consultaextra=\"\")
+	function read(\$multi=true , \$cantConsulta = 0 , \$Consulta = \"\" , \$cantOrden = 0 , \$Orden = \"\" , \$consultaextra=\"\")
 	{
 		\$sql=\"SELECT * FROM ".$NombreTabla." \";
 		if(\$consultaextra==\"\")
@@ -216,9 +207,9 @@ $text.=")\";
 	}
 }
 ?>";
-echo $text;
+echo $NombreTabla." done <br>";
 $fp = fopen("include/class/".$NombreTabla."BD.php", 'w');
 fwrite($fp, $text);
 fclose($fp);
-
+}
 ?>

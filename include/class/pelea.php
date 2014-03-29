@@ -32,5 +32,5 @@ class pelea extends peleaBD
 	{
 		return $this->votos;
 	}
-}
-?>
+}?>
+

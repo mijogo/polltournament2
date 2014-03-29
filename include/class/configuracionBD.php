@@ -23,7 +23,7 @@ class configuracionBD extends DataBase
 		return $this->insert($sql);
 	}
 
-	function read($multi=true , $cantConsulta = 0 , $Consulta = "" , $cantOrden = 0 , $Orden = "" , , $consultaextra="")
+	function read($multi=true , $cantConsulta = 0 , $Consulta = "" , $cantOrden = 0 , $Orden = "" , $consultaextra="")
 	{
 		$sql="SELECT * FROM configuracion ";
 		if($consultaextra=="")

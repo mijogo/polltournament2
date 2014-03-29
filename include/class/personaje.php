@@ -69,3 +69,4 @@ class personaje extends personajeBD
 		return $this->mejorpos;
 	}
 }?>
+

@@ -59,5 +59,5 @@ class menu extends menuBD
 	{
 		return $this->descripcion;
 	}
-}
-?>
+}?>
+

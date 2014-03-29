@@ -18,26 +18,31 @@ class MasterClass
 			$this->tipo=1;
 		else
 			$this->tipo = $_GET['tipo'];
+			
+		if(!isset($_GET['nivel']))
+			$this->nivel=-1;
+		else
+			$this->nivel = $_GET['nivel'];
 	}
 	// id numero pagina, tipo a que pagina se refiere, action, tipo de accion
 	function Trabajar()
 	{
 		$BG = new DataBase();
 		$BG->connect();
-		$this->torneoActual();
-		$this->usuarioACC();
+		//$this->torneoActual();
+		//$this->usuarioACC();
 		if($this->accion == 1)
 		{
-			$file = fopen("estructura.html", "r") or exit("Unable to open file!");
+			$file = fopen("include/estructura.html", "r") or exit("Unable to open file!");
 			//Output a line of the file until the end is reached
 			$pagina="";
 			while(!feof($file))
 			{
 				$pagina .= fgets($file);
 			}
-			$logicaU = new logicav();
+			$logicaU = new logicv();
 			$datos = $logicaU->logicaView($this->id_pagina,$this->tipo);
-			ingPagina($pagina,$menu,$datos[0],$usuario,$datos[1]);
+			echo ingPagina($pagina,$this->menu_u(),$datos[0],$datos[1],"");
 		}
 		if($this->accion == 2)
 		{
@@ -45,7 +50,54 @@ class MasterClass
 			$datos = $logicaU->trabaja($this->id_pagina,$this->tipo);
 			Redireccionar($datos);	
 		}
-		$BG->Eclose();
+		$BG->close();
+	}
+	
+	function menu_u()
+	{
+		$b_menu = new menu();
+		$b_menu->setdependencia($this->nivel);
+		$b_menu = $b_menu->read(true,1,array("dependencia"));
+		$k=0;
+		$datos = array("");
+		for($i=0;$i<count($b_menu);$i++)
+		{
+			$datos[$k][0] = $b_menu[$i]->getdependencia();
+			$datos[$k][1] = $b_menu[$i]->getid();
+			$datos[$k][2] = $b_menu[$i]->gettitulo();
+			if($this->id_pagina == $b_menu[$i]->getid())
+				$datos[$k][3] = 1;
+			else
+				$datos[$k][3] = 0;
+			$datos[$k][5] = $b_menu[$i]->geturl();
+			$c_menu = new menu();
+			$c_menu->setdependencia($b_menu[$i]->getid());
+			$c_menu = $c_menu->read(true,1,array("dependencia"));
+			if(count($c_menu)==0)
+			{
+				$datos[$k][4] = 0;
+				$k++;
+			}
+			else
+			{
+				$datos[$k][4] = 1;
+				$k++;
+				for($j=0;$j<count($c_menu);$j++)
+				{
+					$datos[$k][0] = $c_menu[$j]->getdependencia();
+					$datos[$k][1] = $c_menu[$j]->getid();
+					$datos[$k][2] = $c_menu[$j]->gettitulo();
+					if($this->id_pagina == $c_menu[$j]->getid())
+						$datos[$k][3] = 1;
+					else
+						$datos[$k][3] = 0;
+					$datos[$k][5] = $c_menu[$j]->geturl();
+					$datos[$k][4] = 0;
+					$k++;
+				}
+			}
+		}
+		return menu_html($datos,$this->nivel);
 	}
 	
 	function torneoActual()

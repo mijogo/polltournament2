@@ -78,3 +78,4 @@ class usuario extends usuarioBD
 		return $this->extracodeex;
 	}
 }?>
+

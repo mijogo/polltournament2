@@ -1,7 +1,7 @@
 <?php
 define("AUTHPASS","");
-define("SERVER","");
-define("USER","");
+define("SERVER","localhost");
+define("USER","root");
 define("PASS","");
-define("MYDB","");
+define("MYDB","pollcrear");
 ?>

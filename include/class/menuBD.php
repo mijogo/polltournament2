@@ -16,7 +16,7 @@ class menuBD extends DataBase
 		return $this->insert($sql);
 	}
 
-	function read($multi=true , $cantConsulta = 0 , $Consulta = "" , $cantOrden = 0 , $Orden = "" , , $consultaextra="")
+	function read($multi=true , $cantConsulta = 0 , $Consulta = "" , $cantOrden = 0 , $Orden = "" , $consultaextra="")
 	{
 		$sql="SELECT * FROM menu ";
 		if($consultaextra=="")
@@ -46,18 +46,11 @@ class menuBD extends DataBase
 		if($multi)
 		{
 			$result = $this->select($sql);
-			$".menu."s = array();
+			$menus = array();
 			while($row = $this->fetch($result))
 			{
 				$i=0;
-				$".menu."s[]=new menu(";
-			for($i=0;$i<count($ElementosTabla);$i++)
-			{
-				$text.= "$row[$i++]";
-				if($i!=count($ElementosTabla)-1)
-					$text.= ",";
-			}
-			$text.=");
+				$menus[]=new menu($row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++]);
 			}
 			return $menus;
 		}
@@ -66,14 +59,7 @@ class menuBD extends DataBase
 			$result = $this->select($sql);
 			$row = $this->fetch($result);
 			$i=0;
-			$menus= new menu(";
-			for($i=0;$i<count($ElementosTabla);$i++)
-			{
-				$text.= "$row[$i++]";
-				if($i!=count($ElementosTabla)-1)
-					$text.= ",";
-			}
-			$text.=");
+			$menus= new menu($row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++]);
 			return $menus;
 		}
 	}

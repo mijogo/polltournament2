@@ -22,7 +22,7 @@ class ipBD extends DataBase
 		return $this->insert($sql);
 	}
 
-	function read($multi=true , $cantConsulta = 0 , $Consulta = "" , $cantOrden = 0 , $Orden = "" , , $consultaextra="")
+	function read($multi=true , $cantConsulta = 0 , $Consulta = "" , $cantOrden = 0 , $Orden = "" , $consultaextra="")
 	{
 		$sql="SELECT * FROM ip ";
 		if($consultaextra=="")
@@ -52,18 +52,11 @@ class ipBD extends DataBase
 		if($multi)
 		{
 			$result = $this->select($sql);
-			$".ip."s = array();
+			$ips = array();
 			while($row = $this->fetch($result))
 			{
 				$i=0;
-				$".ip."s[]=new ip(";
-			for($i=0;$i<count($ElementosTabla);$i++)
-			{
-				$text.= "$row[$i++]";
-				if($i!=count($ElementosTabla)-1)
-					$text.= ",";
-			}
-			$text.=");
+				$ips[]=new ip($row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++]);
 			}
 			return $ips;
 		}
@@ -72,14 +65,7 @@ class ipBD extends DataBase
 			$result = $this->select($sql);
 			$row = $this->fetch($result);
 			$i=0;
-			$ips= new ip(";
-			for($i=0;$i<count($ElementosTabla);$i++)
-			{
-				$text.= "$row[$i++]";
-				if($i!=count($ElementosTabla)-1)
-					$text.= ",";
-			}
-			$text.=");
+			$ips= new ip($row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++]);
 			return $ips;
 		}
 	}
@@ -126,4 +112,5 @@ class ipBD extends DataBase
 		}
 		return $this->insert($sql);
 	}
-}?>
+}
+?>

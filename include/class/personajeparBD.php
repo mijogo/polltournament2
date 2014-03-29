@@ -23,7 +23,7 @@ class personajeparBD extends DataBase
 		return $this->insert($sql);
 	}
 
-	function read($multi=true , $cantConsulta = 0 , $Consulta = "" , $cantOrden = 0 , $Orden = "" , , $consultaextra="")
+	function read($multi=true , $cantConsulta = 0 , $Consulta = "" , $cantOrden = 0 , $Orden = "" , $consultaextra="")
 	{
 		$sql="SELECT * FROM personajepar ";
 		if($consultaextra=="")
@@ -53,18 +53,11 @@ class personajeparBD extends DataBase
 		if($multi)
 		{
 			$result = $this->select($sql);
-			$".personajepar."s = array();
+			$personajepars = array();
 			while($row = $this->fetch($result))
 			{
 				$i=0;
-				$".personajepar."s[]=new personajepar(";
-			for($i=0;$i<count($ElementosTabla);$i++)
-			{
-				$text.= "$row[$i++]";
-				if($i!=count($ElementosTabla)-1)
-					$text.= ",";
-			}
-			$text.=");
+				$personajepars[]=new personajepar($row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++]);
 			}
 			return $personajepars;
 		}
@@ -73,14 +66,7 @@ class personajeparBD extends DataBase
 			$result = $this->select($sql);
 			$row = $this->fetch($result);
 			$i=0;
-			$personajepars= new personajepar(";
-			for($i=0;$i<count($ElementosTabla);$i++)
-			{
-				$text.= "$row[$i++]";
-				if($i!=count($ElementosTabla)-1)
-					$text.= ",";
-			}
-			$text.=");
+			$personajepars= new personajepar($row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++]);
 			return $personajepars;
 		}
 	}

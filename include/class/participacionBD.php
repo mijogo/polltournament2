@@ -12,7 +12,7 @@ class participacionBD extends DataBase
 		return $this->insert($sql);
 	}
 
-	function read($multi=true , $cantConsulta = 0 , $Consulta = "" , $cantOrden = 0 , $Orden = "" , , $consultaextra="")
+	function read($multi=true , $cantConsulta = 0 , $Consulta = "" , $cantOrden = 0 , $Orden = "" , $consultaextra="")
 	{
 		$sql="SELECT * FROM participacion ";
 		if($consultaextra=="")
@@ -42,18 +42,11 @@ class participacionBD extends DataBase
 		if($multi)
 		{
 			$result = $this->select($sql);
-			$".participacion."s = array();
+			$participacions = array();
 			while($row = $this->fetch($result))
 			{
 				$i=0;
-				$".participacion."s[]=new participacion(";
-			for($i=0;$i<count($ElementosTabla);$i++)
-			{
-				$text.= "$row[$i++]";
-				if($i!=count($ElementosTabla)-1)
-					$text.= ",";
-			}
-			$text.=");
+				$participacions[]=new participacion($row[$i++],$row[$i++]);
 			}
 			return $participacions;
 		}
@@ -62,14 +55,7 @@ class participacionBD extends DataBase
 			$result = $this->select($sql);
 			$row = $this->fetch($result);
 			$i=0;
-			$participacions= new participacion(";
-			for($i=0;$i<count($ElementosTabla);$i++)
-			{
-				$text.= "$row[$i++]";
-				if($i!=count($ElementosTabla)-1)
-					$text.= ",";
-			}
-			$text.=");
+			$participacions= new participacion($row[$i++],$row[$i++]);
 			return $participacions;
 		}
 	}

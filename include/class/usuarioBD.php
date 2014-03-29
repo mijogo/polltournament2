@@ -18,7 +18,7 @@ class usuarioBD extends DataBase
 		return $this->insert($sql);
 	}
 
-	function read($multi=true , $cantConsulta = 0 , $Consulta = "" , $cantOrden = 0 , $Orden = "" , , $consultaextra="")
+	function read($multi=true , $cantConsulta = 0 , $Consulta = "" , $cantOrden = 0 , $Orden = "" , $consultaextra="")
 	{
 		$sql="SELECT * FROM usuario ";
 		if($consultaextra=="")
@@ -48,18 +48,11 @@ class usuarioBD extends DataBase
 		if($multi)
 		{
 			$result = $this->select($sql);
-			$".usuario."s = array();
+			$usuarios = array();
 			while($row = $this->fetch($result))
 			{
 				$i=0;
-				$".usuario."s[]=new usuario(";
-			for($i=0;$i<count($ElementosTabla);$i++)
-			{
-				$text.= "$row[$i++]";
-				if($i!=count($ElementosTabla)-1)
-					$text.= ",";
-			}
-			$text.=");
+				$usuarios[]=new usuario($row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++]);
 			}
 			return $usuarios;
 		}
@@ -68,14 +61,7 @@ class usuarioBD extends DataBase
 			$result = $this->select($sql);
 			$row = $this->fetch($result);
 			$i=0;
-			$usuarios= new usuario(";
-			for($i=0;$i<count($ElementosTabla);$i++)
-			{
-				$text.= "$row[$i++]";
-				if($i!=count($ElementosTabla)-1)
-					$text.= ",";
-			}
-			$text.=");
+			$usuarios= new usuario($row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++]);
 			return $usuarios;
 		}
 	}
@@ -122,4 +108,5 @@ class usuarioBD extends DataBase
 		}
 		return $this->insert($sql);
 	}
-}?>
+}
+?>

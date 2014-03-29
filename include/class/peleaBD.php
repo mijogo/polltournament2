@@ -13,7 +13,7 @@ class peleaBD extends DataBase
 		return $this->insert($sql);
 	}
 
-	function read($multi=true , $cantConsulta = 0 , $Consulta = "" , $cantOrden = 0 , $Orden = "" , , $consultaextra="")
+	function read($multi=true , $cantConsulta = 0 , $Consulta = "" , $cantOrden = 0 , $Orden = "" , $consultaextra="")
 	{
 		$sql="SELECT * FROM pelea ";
 		if($consultaextra=="")
@@ -43,18 +43,11 @@ class peleaBD extends DataBase
 		if($multi)
 		{
 			$result = $this->select($sql);
-			$".pelea."s = array();
+			$peleas = array();
 			while($row = $this->fetch($result))
 			{
 				$i=0;
-				$".pelea."s[]=new pelea(";
-			for($i=0;$i<count($ElementosTabla);$i++)
-			{
-				$text.= "$row[$i++]";
-				if($i!=count($ElementosTabla)-1)
-					$text.= ",";
-			}
-			$text.=");
+				$peleas[]=new pelea($row[$i++],$row[$i++],$row[$i++]);
 			}
 			return $peleas;
 		}
@@ -63,14 +56,7 @@ class peleaBD extends DataBase
 			$result = $this->select($sql);
 			$row = $this->fetch($result);
 			$i=0;
-			$peleas= new pelea(";
-			for($i=0;$i<count($ElementosTabla);$i++)
-			{
-				$text.= "$row[$i++]";
-				if($i!=count($ElementosTabla)-1)
-					$text.= ",";
-			}
-			$text.=");
+			$peleas= new pelea($row[$i++],$row[$i++],$row[$i++]);
 			return $peleas;
 		}
 	}

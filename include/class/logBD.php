@@ -16,7 +16,7 @@ class logBD extends DataBase
 		return $this->insert($sql);
 	}
 
-	function read($multi=true , $cantConsulta = 0 , $Consulta = "" , $cantOrden = 0 , $Orden = "" , , $consultaextra="")
+	function read($multi=true , $cantConsulta = 0 , $Consulta = "" , $cantOrden = 0 , $Orden = "" , $consultaextra="")
 	{
 		$sql="SELECT * FROM log ";
 		if($consultaextra=="")
@@ -46,18 +46,11 @@ class logBD extends DataBase
 		if($multi)
 		{
 			$result = $this->select($sql);
-			$".log."s = array();
+			$logs = array();
 			while($row = $this->fetch($result))
 			{
 				$i=0;
-				$".log."s[]=new log(";
-			for($i=0;$i<count($ElementosTabla);$i++)
-			{
-				$text.= "$row[$i++]";
-				if($i!=count($ElementosTabla)-1)
-					$text.= ",";
-			}
-			$text.=");
+				$logs[]=new log($row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++]);
 			}
 			return $logs;
 		}
@@ -66,14 +59,7 @@ class logBD extends DataBase
 			$result = $this->select($sql);
 			$row = $this->fetch($result);
 			$i=0;
-			$logs= new log(";
-			for($i=0;$i<count($ElementosTabla);$i++)
-			{
-				$text.= "$row[$i++]";
-				if($i!=count($ElementosTabla)-1)
-					$text.= ",";
-			}
-			$text.=");
+			$logs= new log($row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++],$row[$i++]);
 			return $logs;
 		}
 	}
@@ -120,4 +106,5 @@ class logBD extends DataBase
 		}
 		return $this->insert($sql);
 	}
-}?>
+}
+?>

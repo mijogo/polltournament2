@@ -23,5 +23,5 @@ class participacion extends participacionBD
 	{
 		return $this->idbatalla;
 	}
-}
-?>
+}?>
+

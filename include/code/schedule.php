@@ -78,7 +78,7 @@ class Schedule
 			if(($personajeTotal-($cantidadGrupo*$newConf->getnumerogrupos()))>=$numeroGrupo)
 				$cantidadGrupo++;
 				
-			$perListos = new personajepar()
+			$perListos = new personajepar();
 			$perListos->setronda($instancia);
 			$perListos->setgrupo($numeroGrupo);
 			$perListos->setidtorneo($torneoActual->getid());
@@ -114,7 +114,7 @@ class Schedule
 						else
 						{
 							$porcentaje = ($totalPonderacion+$personajesSortear[$escoger]->getponderacion())/($cantidadListos+$i+1);
-							$porcentaje = abs(($porcentaje-$torneoActual->getponderacionprom())/$torneoActual->getponderacionprom())
+							$porcentaje = abs(($porcentaje-$torneoActual->getponderacionprom())/$torneoActual->getponderacionprom());
 							$porcentaje = 1000 - $porcentaje*1000;
 							if($porcentaje<0)
 								$escoger=$perSort[$escoger]["prox"];
@@ -124,7 +124,7 @@ class Schedule
 								if($res<$porcentaje)
 								{
 									$personajesSortear[$escoger]->setgrupo($numeroGrupo);
-									$personajesSortear[$escoger]->update(1,array("grupo"),1,array("id"))
+									$personajesSortear[$escoger]->update(1,array("grupo"),1,array("id"));
 									$perSort[$escoger]["act"]=1;
 									$temSort = $perSort[$escoger];
 									
@@ -163,16 +163,16 @@ class Schedule
 						else
 						{
 							$personajesSortear[$escoger]->setgrupo($numeroGrupo);
-							$personajesSortear[$escoger]->update(1,array("grupo"),1,array("id"))
+							$personajesSortear[$escoger]->update(1,array("grupo"),1,array("id"));
 							$perSort[$escoger]["act"]=1;
 							$temSort = $perSort[$escoger];
 									
 							$tempProx=$perSort[$escoger]["prox"];
 							while($perSort[$tempProx]["act"]==1)
-								$tempProx=$perSort[$tempMov]["prox"]
+								$tempProx=$perSort[$tempMov]["prox"];
 							$tempAnt=$perSort[$escoger]["ant"];
 							while($perSort[$tempAnt]["act"]==1)
-								$tempAnt=$perSort[$tempAnt]["ant"]
+								$tempAnt=$perSort[$tempAnt]["ant"];
 										
 							$perSort[$escoger]["prox"]=$tempProx;
 							$perSort[$escoger]["ant"]=$tempAnt;
@@ -246,7 +246,7 @@ class Schedule
 						else
 						{
 							$porcentaje = ($totalPonderacion+$personajesSortear[$escoger]->getponderacion())/($cantidadListos+$i+1);
-							$porcentaje = abs(($porcentaje-$torneoActual->getponderacionprom())/$torneoActual->getponderacionprom())
+							$porcentaje = abs(($porcentaje-$torneoActual->getponderacionprom())/$torneoActual->getponderacionprom());
 							$porcentaje = 1000 - $porcentaje*1000;
 							if($porcentaje<15)
 								$porcentaje=15;
@@ -285,7 +285,7 @@ class Schedule
 				$cuantosVan=0;
 				for($i=0;$i<count($datosGrupo);$i++)
 				{
-					ponderacionGrupo=0;
+					$ponderacionGrupo=0;
 					if($cuantosVan+$datosGrupo[$i]["cantidad"]>$cantidadListos)
 					{
 						if($cuantosVan < $cantidadListos)
@@ -308,8 +308,8 @@ class Schedule
 										$escoger=$sorGrupo[$escoger]["prox"];
 									else
 									{
-										$porcentaje = ($ponderacionGrupo+$personajesSortear[sorGrupo[$escoger]["id"]]->getponderacion())/($j+1);
-										$porcentaje = abs(($porcentaje-$torneoActual->getponderacionprom())/$torneoActual->getponderacionprom())
+										$porcentaje = ($ponderacionGrupo+$personajesSortear[$sorGrupo[$escoger]["id"]]->getponderacion())/($j+1);
+										$porcentaje = abs(($porcentaje-$torneoActual->getponderacionprom())/$torneoActual->getponderacionprom());
 										$porcentaje = 1000 - $porcentaje*1000;
 										if($porcentaje<50)
 											$porcentaje=50;
@@ -317,7 +317,7 @@ class Schedule
 										if($res<$porcentaje)
 										{			
 											$personajesSortear[$sorGrupo[$escoger]["id"]]->setgrupo($datosGrupo[$i]["nombre"]);
-											$personajesSortear[$sorGrupo[$escoger]["id"]]->update(1,array("grupo"),1,array("id"))
+											$personajesSortear[$sorGrupo[$escoger]["id"]]->update(1,array("grupo"),1,array("id"));
 											
 											$sorGrupo[$escoger]["act"]=1;
 											$temSort = $sorGrupo[$escoger];
@@ -371,7 +371,7 @@ class Schedule
 									else
 									{
 										$personajesSortear[$escoger]->setgrupo($datosGrupo[$i]["nombre"]);
-										$personajesSortear[$escoger]->update(1,array("grupo"),1,array("id"))
+										$personajesSortear[$escoger]->update(1,array("grupo"),1,array("id"));
 											
 										$perSort[$escoger]["act"]=1;
 										$temSort = $perSort[$escoger];
@@ -471,11 +471,11 @@ class Schedule
 						$k=0;
 					for($j=0;$sigueLoop;$j++)
 					{
-						if(count($estadisticasListas)=<$j)
+						if(count($estadisticasListas)<=$j)
 						{
 							while(FechaMayor($fechaInicio,$votosDelPersonaje[$k]->getfecha()&&$k<count($votosDelPersonaje))==1)
 								$k++;
-							$estadisticaNueva = new($partBat[$i]->getidpersonaje(),$BatallasActivas[$i]->getid(),$fechaInicio,$k);
+							$estadisticaNueva = new estadistica($partBat[$i]->getidpersonaje(),$BatallasActivas[$i]->getid(),$fechaInicio,$k);
 							$estadisticaNueva->save();
 						}
 						cambioFecha($fechaInicio,$torneoActual->getintervalo());
@@ -489,7 +489,7 @@ class Schedule
 			
 			$peleaBatalla = new pelea();
 			$peleaBatalla->setidbatalla($BatallasActivas[$i]->getid());
-			$peleaBatalla = $peleaBatalla->read(true,1,array("idbatalla"),1,array("votos","DESC"))
+			$peleaBatalla = $peleaBatalla->read(true,1,array("idbatalla"),1,array("votos","DESC"));
 			
 			$configuracionUsar = new configuracion();
 			$configuracionUsar->setnombre($BatallasActivas[$i]->getronda());
@@ -535,10 +535,16 @@ class Schedule
 						if($configuracionSig->getsorteo()==1)
 							$personajeCambiar->setgrupo("N");
 						else
+						{
 							if($configuracionSig->gettipo()=="ELIMI")
-								$personajeCambiar->setgrupo(cambioGrupo($personajeCambiar->getgrupo(),$configuracionUsar->getnumerogrupos(),configuracionSig->getnumerogrupos(),"ELIMI");
+							{
+								$personajeCambiar->setgrupo(cambioGrupo($personajeCambiar->getgrupo(),$configuracionUsar->getnumerogrupos(),$configuracionSig->getnumerogrupos(),"ELIMI"));
+							}
 							elseif($configuracionSig->gettipo()=="ELGRU")
-								$personajeCambiar->setgrupo(cambioGrupo($personajeCambiar->getgrupo(),$configuracionUsar->getnumerobatallas(),configuracionSig->getnumerobatallas(),"ELGRU");
+							{
+								$personajeCambiar->setgrupo(cambioGrupo($personajeCambiar->getgrupo(),$configuracionUsar->getnumerobatallas(),$configuracionSig->getnumerobatallas(),"ELGRU"));
+							}
+						}
 						$personajeCambiar->update(2,array("grupo","ronda"),1,array("id"));
 						if($i==$primPos-1&&$i<count($peleaBatalla)-1&&$peleaBatalla[$i]->getvotos()==$peleaBatalla[$i+1]->getvotos())
 						{
@@ -558,9 +564,9 @@ class Schedule
 							$personajeCambiar->setronda("N");
 						else
 							if($configuracionSigSeg->gettipo()=="ELIMI")
-								$personajeCambiar->setgrupo(cambioGrupo($personajeCambiar->getgrupo(),$configuracionUsar->getnumerogrupos(),configuracionSigSeg->getnumerogrupos(),"ELIMI");
+								$personajeCambiar->setgrupo(cambioGrupo($personajeCambiar->getgrupo(),$configuracionUsar->getnumerogrupos(),$configuracionSigSeg->getnumerogrupos(),"ELIMI"));
 							elseif($configuracionSigSeg->gettipo()=="ELGRU")
-								$personajeCambiar->setgrupo(cambioGrupo($personajeCambiar->getgrupo(),$configuracionUsar->getnumerobatallas(),configuracionSigSeg->getnumerobatallas(),"ELGRU");
+								$personajeCambiar->setgrupo(cambioGrupo($personajeCambiar->getgrupo(),$configuracionUsar->getnumerobatallas(),$configuracionSigSeg->getnumerobatallas(),"ELGRU"));
 						$personajeCambiar->update(2,array("grupo","ronda"),1,array("id"));
 						if($i==$segPos-1&&$i<count($peleaBatalla)-1&&$peleaBatalla[$i]->getvotos()==$peleaBatalla[$i+1]->getvotos())
 						{
@@ -580,7 +586,7 @@ class Schedule
 			$BatallasActivas[$i]->setestado(1);
 			$BatallasActivas[$i]->setnumerovotos($votosTotales);
 			$BatallasActivas[$i]->setganador($idGanador);
-			$BatallasActivas[$i]->update(3,array("estado","numerovotos","ganador"),1,array("id"))
+			$BatallasActivas[$i]->update(3,array("estado","numerovotos","ganador"),1,array("id"));
 		}
 		changeEvento("KILL");
 	}//fin funcion conteo votos
@@ -643,10 +649,10 @@ class Schedule
 			$pos[18] = 60;
 			$pos[19] = 40;
 			$participaciones = new participacion();
-			$participaciones->setidbatalla(batallutil[$i]->getid());
+			$participaciones->setidbatalla($batallutil[$i]->getid());
 			$participaciones = $participaciones->read(true,1,array("idbatalla"));
 			$pelearealizada = new pelea();
-			$pelearealizada->setidbatalla(batallutil[$i]->getid());
+			$pelearealizada->setidbatalla($batallutil[$i]->getid());
 			$pelearealizada = $pelearealizada->read(true,1,array("idbatalla"));
 			$k=0;
 			$totalponderacion=0;
@@ -701,7 +707,7 @@ class Schedule
 		$torneoActual->setactivo(1);
 		$torneoActual = $torneoActual->read(false,1,array("activo"));
 		$torneoActual->setponderacionprom(round($totalponderacion/count($personajesutil)));
-		$torneoActual->update(1,array("ponderacionprom"),1,array("id"))
+		$torneoActual->update(1,array("ponderacionprom"),1,array("id"));
 	}
 }
 ?>

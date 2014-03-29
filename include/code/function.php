@@ -330,7 +330,7 @@ function arrayobjeto($arreglo,$tipoDato,$dato)
 {
 	$objeto = false;
 	for($i=0;i<count($arreglo);$i++)
-		if($arreglo[$i]->get$tipoDato() == $dato)
+		if($arreglo[$i]->$tipoDato == $dato)
 			$objeto = $arreglo[$i];
 	return $objeto;
 }
@@ -338,21 +338,21 @@ function comprobararray($arreglo,$tipoDato,$dato)
 {
 	$objeto = false;
 	for($i=0;i<count($arreglo);$i++)
-		if($arreglo[$i]->get$tipoDato() == $dato)
+		if($arreglo[$i]->$tipoDato == $dato)
 			$objeto = true;
 	return $objeto;
 }
 
-function ingPagina($estructura,$menu,$script,$usuario,$body,$extra="")
+function ingPagina($estructura,$menu,$script,$body,$widget,$extra="")
 {
 	$estructura = explode("[[menu]]",$estructura);
-	$estructura = $estructura[0]+$menu+$estructura[1];
+	$estructura = $estructura[0].$menu.$estructura[1];
 	$estructura = explode("[[script]]",$estructura);
-	$estructura = $estructura[0]+$script+$estructura[1];
-	$estructura = explode("[[usuario]]",$estructura);
-	$estructura = $estructura[0]+$usuario+$estructura[1];
+	$estructura = $estructura[0].$script.$estructura[1];
 	$estructura = explode("[[body]]",$estructura);
-	$estructura = $estructura[0]+$body+$estructura[1];
+	$estructura = $estructura[0].$body.$estructura[1];
+	$estructura = explode("[[widget]]",$estructura);
+	$estructura = $estructura[0].$widget.$estructura[1];
 	return $estructura;
 }
 ?>

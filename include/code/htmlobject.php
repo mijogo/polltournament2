@@ -178,5 +178,76 @@ function img($src,$height="",$width="",$id="",$class="")
 
 	$text .= "/>\n";
 	return $text;
-	}
+}
+
+function menu_html($datos,$nivel)
+{
+	$text = "";
+	$text .= " <div class=\"navbar navbar-inverse navbar-fixed-top\">
+      <div class=\"container\">
+        <div class=\"navbar-header\">
+          <button type=\"button\" class=\"navbar-toggle\" data-toggle=\"collapse\" data-target=\".navbar-collapse\">
+            <span class=\"icon-bar\"></span>
+            <span class=\"icon-bar\"></span>
+            <span class=\"icon-bar\"></span>
+          </button>
+          <a class=\"navbar-brand\" href=\"#\">Project name</a>
+        </div>
+        <div class=\"navbar-collapse collapse\">
+		  <ul class=\"nav navbar-nav\">";
+
+		 $abierto1=false;
+		 $num=-1;
+		 for($i=0;$i<count($datos);$i++)
+		 {
+			 if($datos[$i][4] == 0)
+			 {
+				if($datos[$i][5]=="")
+					$url = "?id=".$datos[$i][1]."&nivel=".$nivel;
+				else
+					$url =  $datos[$i][5];
+				$activo = "";
+				if($datos[$i][3]==1)
+					$activo = " class=\"active\"";
+				$text .= "<li".$activo."><a href=\"".$url."\">".$datos[$i][2]."</a></li>";
+			 }
+			 else
+			 {
+			 	if(!$abierto1)
+				{
+					if($datos[$i][5]=="")
+						$url = "?id=".$datos[$i][1]."&nivel=".$nivel;
+					else
+						$url =  $datos[$i][5];
+					$text .= "            <li class=\"dropdown\">
+              <a href=\"".$url."\" class=\"dropdown-toggle\" data-toggle=\"dropdown\">Dropdown <b class=\"caret\"></b></a>
+              <ul class=\"dropdown-menu\">";
+			  		$abierto1=true;
+					$num = $i;
+				}
+			 }
+			 if($num != $i && ($abierto1 && ($i+1 == count($datos) || $datos[$i][0] != $datos[$i+1][0])))
+			 {
+				$text .="              </ul>
+            </li>";
+				$abierto1=false; 
+			 }
+		 }
+
+          $text .= "</ul>
+          <form class=\"navbar-form navbar-right\">
+            <div class=\"form-group\">
+              <input type=\"text\" placeholder=\"Email\" class=\"form-control\">
+            </div>
+            <div class=\"form-group\">
+              <input type=\"password\" placeholder=\"Password\" class=\"form-control\">
+            </div>
+            <button type=\"submit\" class=\"btn btn-success\">Sign in</button>
+          </form>
+       
+	    </div>
+      </div>
+    </div>";
+	return $text;	
+}
 ?>

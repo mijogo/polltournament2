@@ -1,7 +1,7 @@
 <?php
-include_once "Function/function.php";
-include_once "Function/logicc.php";
-include_once "Function/logicv.php";
-include_once "Function/htmlobject.php";
-include_once "Function/schedule.php";
+include_once "code/function.php";
+include_once "code/logicc.php";
+include_once "code/logicv.php";
+include_once "code/htmlobject.php";
+include_once "code/schedule.php";
 ?>

@@ -122,5 +122,5 @@ class personajepar extends personajeparBD
 	{
 		return $this->ponderacion;
 	}
-}
-?>
+}?>
+
