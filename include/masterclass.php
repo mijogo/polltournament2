@@ -4,29 +4,48 @@ class MasterClass
 {
 	function MasterClass()
 	{
-		$id_pagina = $_GET['id'];
-		$accion = $_GET['accion'];
+		if(!isset($_GET['id']))
+			$this->id_pagina =1;
+		else
+			$this->id_pagina = $_GET['id'];
+		
+		if(!isset($_GET['accion']))
+			$this->accion=1;
+		else
+			$this->accion = $_GET['accion'];
+		
+		if(!isset($_GET['tipo']))
+			$this->tipo=1;
+		else
+			$this->tipo = $_GET['tipo'];
 	}
 	// id numero pagina, tipo a que pagina se refiere, action, tipo de accion
 	function Trabajar()
 	{
+		$BG = new DataBase();
+		$BG->connect();
 		$this->torneoActual();
 		$this->usuarioACC();
-		if($accion == 1)
+		if($this->accion == 1)
 		{
-			$pagina = "";
-			$ar=fopen("estructura.html","r") or
-    		die("No se pudo abrir el archivo");
- 			while (!feof($ar))
- 			{
-    			$linea=fgets($ar);
-				$pagina += $linea;
-  			}
-  			fclose($ar);
+			$file = fopen("estructura.html", "r") or exit("Unable to open file!");
+			//Output a line of the file until the end is reached
+			$pagina="";
+			while(!feof($file))
+			{
+				$pagina .= fgets($file);
+			}
 			$logicaU = new logicav();
-			$datos = $logicaU->logicaView($id_pagina);
-			ingPagina($pagina,$menu,$datos[0],$usuario,$datos[1])
+			$datos = $logicaU->logicaView($this->id_pagina,$this->tipo);
+			ingPagina($pagina,$menu,$datos[0],$usuario,$datos[1]);
 		}
+		if($this->accion == 2)
+		{
+			$logicaU = new logicc();
+			$datos = $logicaU->trabaja($this->id_pagina,$this->tipo);
+			Redireccionar($datos);	
+		}
+		$BG->Eclose();
 	}
 	
 	function torneoActual()
@@ -112,7 +131,7 @@ class MasterClass
 					{
 						$estaIp->settiempo(0);
 						$estaIp->setuser($this->userForo->getuser_id());
-						$estaIp->update(1,array("tiempo","user"),1,array("uniquecode"))
+						$estaIp->update(1,array("tiempo","user"),1,array("uniquecode"));
 					}
 				}
 			}

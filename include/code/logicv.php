@@ -5,7 +5,7 @@ class logicv
 	{
 	}
 	
-	function logicaView($id_pagina)
+	function logicaView($id_pagina,$tipo_pagina)
 	{
 		$paginas[0]==1;
 		if($idpagina == $paginas[0])
