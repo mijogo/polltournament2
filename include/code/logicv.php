@@ -15,4 +15,5 @@ class logicv
 			return $texto;
 		}
 	}
+	
 }
