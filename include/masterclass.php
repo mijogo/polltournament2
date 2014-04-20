@@ -20,7 +20,18 @@ class MasterClass
 			$this->tipo = $_GET['tipo'];
 			
 		if(!isset($_GET['nivel']))
-			$this->nivel=-1;
+		{
+			$BG = new DataBase();
+			$BG->connect();
+			$a_menu = new menu();
+			$a_menu->setid($this->id_pagina);
+			$a_menu = $a_menu->read(true,1,array("id"));
+			if(count($a_menu) == 0)
+				$this->nivel=-1;
+			else
+				$this->nivel=$a_menu[0]->getdependencia();
+			$BG->close();
+		}
 		else
 			$this->nivel = $_GET['nivel'];
 	}

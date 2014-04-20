@@ -191,7 +191,7 @@ function menu_html($datos,$nivel)
             <span class=\"icon-bar\"></span>
             <span class=\"icon-bar\"></span>
           </button>
-          <a class=\"navbar-brand\" href=\"#\">Project name</a>
+          <a class=\"navbar-brand\" href=\"?id=1&nivel=-1\">Project name</a>
         </div>
         <div class=\"navbar-collapse collapse\">
 		  <ul class=\"nav navbar-nav\">";
@@ -203,7 +203,7 @@ function menu_html($datos,$nivel)
 			 if($datos[$i][4] == 0)
 			 {
 				if($datos[$i][5]=="")
-					$url = "?id=".$datos[$i][1]."&nivel=".$nivel;
+					$url = "?id=".$datos[$i][1];
 				else
 					$url =  $datos[$i][5];
 				$activo = "";
