@@ -220,7 +220,7 @@ function menu_html($datos,$nivel)
 					else
 						$url =  $datos[$i][5];
 					$text .= "            <li class=\"dropdown\">
-              <a href=\"".$url."\" class=\"dropdown-toggle\" data-toggle=\"dropdown\">Dropdown <b class=\"caret\"></b></a>
+              <a href=\"".$url."\" class=\"dropdown-toggle\" data-toggle=\"dropdown\">".$datos[$i][2]." <b class=\"caret\"></b></a>
               <ul class=\"dropdown-menu\">";
 			  		$abierto1=true;
 					$num = $i;
@@ -235,15 +235,14 @@ function menu_html($datos,$nivel)
 		 }
 
           $text .= "</ul>
+ 		<div style=\"height: 1px;\" class=\"navbar-collapse collapse\">
+          <ul class=\"nav navbar-nav navbar-right\">
+            <li><a href=\"#\">perfil</a></li>
+          </ul>
           <form class=\"navbar-form navbar-right\">
-            <div class=\"form-group\">
-              <input type=\"text\" placeholder=\"Email\" class=\"form-control\">
-            </div>
-            <div class=\"form-group\">
-              <input type=\"password\" placeholder=\"Password\" class=\"form-control\">
-            </div>
-            <button type=\"submit\" class=\"btn btn-success\">Sign in</button>
+            <input class=\"form-control\" placeholder=\"Buscar...\" type=\"text\">
           </form>
+        </div>
        
 	    </div>
       </div>

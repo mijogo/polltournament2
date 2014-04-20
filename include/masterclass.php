@@ -29,7 +29,16 @@ class MasterClass
 			if(count($a_menu) == 0)
 				$this->nivel=-1;
 			else
-				$this->nivel=$a_menu[0]->getdependencia();
+			{	
+				
+				$b_menu = new menu();
+				$b_menu->setid($a_menu[0]->getdependencia());
+				$b_menu = $b_menu->read(true,1,array("id"));
+				if(count($b_menu) == 0)
+					$this->nivel=$a_menu[0]->getdependencia();
+				else
+					$this->nivel=$b_menu[0]->getdependencia();
+			}
 			$BG->close();
 		}
 		else
@@ -53,7 +62,7 @@ class MasterClass
 			}
 			$logicaU = new logicv();
 			$datos = $logicaU->logicaView($this->id_pagina,$this->tipo);
-			echo ingPagina($pagina,$this->menu_u(),$datos[0],$datos[1],"");
+			echo ingPagina($pagina,$this->menu_u(),$datos[0],$datos[1],widget());
 		}
 		if($this->accion == 2)
 		{
