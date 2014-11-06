@@ -45,12 +45,13 @@ class MasterClass
 			$this->nivel = $_GET['nivel'];
 	}
 	// id numero pagina, tipo a que pagina se refiere, action, tipo de accion
+	
 	function Trabajar()
 	{
 		$BG = new DataBase();
 		$BG->connect();
-		//$this->torneoActual();
-		//$this->usuarioACC();
+		$this->torneoActual();
+		$this->usuarioACC();
 		if($this->accion == 1)
 		{
 			$file = fopen("include/estructura.html", "r") or exit("Unable to open file!");
@@ -136,40 +137,16 @@ class MasterClass
 	
 	function usuarioACC()
 	{
-		if(isset($_COOKIE['phpbb3_tdqhk_sid']))
-		{
-			$sesionForo = new phpbb_sessions();
-			$sesionForo->setsession_id($_COOKIE['phpbb3_tdqhk_sid']);
-			$sesionForo = $sesionForo->read(false,1,array("session_id"));
-			
-			$userForo = new phpbb_users();
-			$userForo->setuser_id($sesionForo->getsession_user_id());
-			$userForo = $userForo->read(false,1,array("user_id"));
-			
-			if($userForo->getusername()!="Anonymous")
-			{
-				$this->activoForo=true;
-				$this->userForo = $userForo;
-			}
-			else
-				$this->activoForo=false;
-		}
-		else
-			$this->activoForo=false;
-		
-		if($this->activoForo)
+		if(isset($_COOKIE['id_user']))
 		{
 			$userpage = new usuario();
-			$userpage->setidusuario($this->userForo->getuser_id());
-			$userpage = $userpage->read(true,1,array("idusuario"));
-			if(count($userpage)==0)
-			{
-				$userpage = new usuario();
-				$userpage->setidusuario($this->userForo->getuser_id());
-				$userpage->setpoder(0);
-				$userpage->save();
-			}
+			$userpage->setidusuario($_COOKIE['id_user']);
+			$userpage->read(false,1,array("idusuario"));
+			$this->user = $userpage;
+			$this->useractivo=true;
 		}
+		else
+			$this->useractivo=false;
 		
 		if(isset($_COOKIE['CodePassVote']))
 		{
@@ -199,10 +176,10 @@ class MasterClass
 				if($estaIp->getidevento()==$evetoActual->getid())
 				{
 					$ipcreada=true;
-					if($this->activoForo && $estaIp->gettiempo()>0)
+					if($this->useractivo && $estaIp->gettiempo()>0)
 					{
 						$estaIp->settiempo(0);
-						$estaIp->setuser($this->userForo->getuser_id());
+						$estaIp->setuser($this->user->getidusuario());
 						$estaIp->update(1,array("tiempo","user"),1,array("uniquecode"));
 					}
 				}
@@ -218,9 +195,9 @@ class MasterClass
 			$ipUsadas->setcodepass($this->cookies);
 			$ipUsadas->setip($this->ip);
 			$ipUsadas->setidevento($evetoActual->getid());
-			if($this->activoForo)
+			if($this->useractivo)
 			{
-				$ipUsadas->setuser($this->userForo->getuser_id());
+				$ipUsadas->setuser($this->user->getidusuario());
 				$ipUsadas = $ipUsadas->read(true,0,"",1,array("fecha","ASC")," idevento = ".$ipUsadas->getidevento()." AND (codepass = '".$ipUsadas->getcodepass()."' OR ip = '".$ipUsadas->getip()."' OR user = ".$ipUsadas->getuser().") ");
 			}
 			else
@@ -316,8 +293,8 @@ class MasterClass
 		}*/
 		$extraInfo = $_SERVER['HTTP_USER_AGENT'];
 		$creaIp->setinfo($extraInfo);
-		if($this->activoForo)
-			$creaIp->setuser($this->userForo->getuser_id());
+		if($this->useractivo)
+			$creaIp->setuser($this->user->getidusuario());
 		else
 			$creaIp->setuser(-1);
 		$creaIp->setuniquecode($this->newUniqueCode);
