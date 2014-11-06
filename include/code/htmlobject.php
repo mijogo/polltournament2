@@ -237,7 +237,7 @@ function menu_html($datos,$nivel)
           $text .= "</ul>
  		<div style=\"height: 1px;\" class=\"navbar-collapse collapse\">
           <ul class=\"nav navbar-nav navbar-right\">
-            <li><a href=\"#\">perfil</a></li>
+            <li><a href=\"?nivel=-2\">perfil</a></li>
           </ul>
           <form class=\"navbar-form navbar-right\">
             <input class=\"form-control\" placeholder=\"Buscar...\" type=\"text\">
